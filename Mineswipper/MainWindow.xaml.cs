@@ -376,7 +376,6 @@ namespace Mineswipper
         {
             if (matrixMine.cells[pos.Item1, pos.Item2].IsOpen == true)
                 return;
-            
             Label text = new Label();
             int count = CheckClickCount(pos);
             //MessageBox.Show($"{pos.Item1} = {pos.Item2} = {count} ==== {((pos.Item1 * GameBlock.RowDefinitions.Count) + pos.Item2) - count}");
@@ -404,7 +403,7 @@ namespace Mineswipper
             }
             else if (matrixMine.cells[pos.Item1, pos.Item2].HasMine==true)
             {
-                OpenAllMine();
+                OpenAllMine(sender, e);
             }
             else
             {
@@ -449,7 +448,7 @@ namespace Mineswipper
             }
            
         }
-        private void OpenAllMine()
+        private void OpenAllMine(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
             {
@@ -467,9 +466,59 @@ namespace Mineswipper
                 }
             }
 
-            MessageBox.Show("Вы проиграли");
-            this.Close();
+            MessageBoxResult result = MessageBox.Show("You loose! Would you like to restart?", "Mine was detected", MessageBoxButton.YesNo);
+            switch(result)
+            {
+                case MessageBoxResult.Yes:
+                    Restart(sender,e);
+                    break;
+                case MessageBoxResult.No:
+                    this.Close();
+                    break;
+                
+            }
         }
+
+        private void OpenAll()
+        {
+            for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
+            {
+                for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
+                {
+                    if (matrixMine.cells[i,j].HasMine == true)
+                    {
+                        (int, int) pos = (i, j);
+                        Label text = new Label();
+                        text.Background = new ImageBrush(new BitmapImage(new Uri("https://clipartart.com/images/mine-sweeper-clipart-4.png")));
+                        GameBlock.Children.Add(text);
+                        Grid.SetColumn(text, pos.Item1);
+                        Grid.SetRow(text, pos.Item2);
+                    }
+                    else if(matrixMine.cells[i,j].MinesAround != 0)
+                    {
+                        (int, int) pos = (i, j);
+                        Label text = new Label();
+                        text.Content = "" + matrixMine.cells[i, j].MinesAround;
+                        GameBlock.Children.Add(text);
+                        Grid.SetColumn(text, pos.Item1);
+                        Grid.SetRow(text, pos.Item2);
+                    }
+                    else if(matrixMine.cells[i,j].MinesAround == 0)
+                    {
+                        (int, int) pos = (i, j);
+                        Label text = new Label();
+                        text.Content = "" + matrixMine.cells[i, j].MinesAround;
+                        GameBlock.Children.Add(text);
+                        Grid.SetColumn(text, pos.Item1);
+                        Grid.SetRow(text, pos.Item2);
+                        
+                    }
+                }
+            }
+
+            
+        }
+
         private int CheckClickCount((int, int) pos)
         {
             int count = 0;

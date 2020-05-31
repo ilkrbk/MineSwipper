@@ -58,7 +58,6 @@ namespace Mineswipper
             int col = 18, row = 14;
             switch (levelToRestart)
             {
-
                 case 1:
                     Normal.IsEnabled = true;
                     Easy.IsEnabled = false;
@@ -66,11 +65,8 @@ namespace Mineswipper
                 case 2:
                     Hard.IsEnabled = true;
                     Easy.IsEnabled = false;
-
-
                     break;
             }
-
             levelToRestart = 0;
             Easy.IsEnabled = false;
             TimeBlock.Text = "00:00";
@@ -87,7 +83,6 @@ namespace Mineswipper
             CountBlock.Text = "100";
             switch (levelToRestart)
             {
-
                 case 0:
                     Normal.IsEnabled = false;
                     Easy.IsEnabled = true;
@@ -95,8 +90,6 @@ namespace Mineswipper
                 case 2:
                     Hard.IsEnabled = true;
                     Normal.IsEnabled = false;
-
-
                     break;
             }
             levelToRestart = 1;
@@ -173,13 +166,8 @@ namespace Mineswipper
                 //matrixMine = MineCreate(posButton);
                 matrixMine = MineCreate(posButton);
                 SearchCounter(ref matrixMine);
-                
             }
-           
-
-            
-         OpenBtn(posButton, sender, e);
-            
+            OpenBtn(posButton, sender, e);
         }
         private void ClickRightButton(object sender, RoutedEventArgs e)
         {
@@ -218,7 +206,6 @@ namespace Mineswipper
             }
             return true;
         }
-
         private int ConvertStr(string str)
         {
             List<char> list = new List<char>();
@@ -233,7 +220,6 @@ namespace Mineswipper
 
             return Convert.ToInt32(result);
         }
-
         private Field MineCreate((int, int) posButton)
         {
             //string[,] field = new string[GameBlock.ColumnDefinitions.Count, GameBlock.RowDefinitions.Count];
@@ -293,10 +279,8 @@ namespace Mineswipper
                 }
             }
         }
-
         private void Podskazka(object sender, RoutedEventArgs e)
         {
-            
             for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
             {
                 for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
@@ -365,15 +349,19 @@ namespace Mineswipper
         }
         private void Podskaz(int i, int j)
         {
+            /*Image img = new Image();
+            img.Source = new BitmapImage(new Uri("https://img2.freepng.ru/20181116/jkb/kisspng-vector-graphics-clip-art-stock-illustration-monkey-png-5bee729ce16496.8767947215423535649232.jpg"));
+            button.Content = img;*/
+            // ==========
             matrixMine.cells[i, j].IsOpen = true;
-            
             (int, int) pos = (i, j);
             Label text = new Label();
             text.Background = new ImageBrush(new BitmapImage(new Uri("https://clipartart.com/images/mine-sweeper-clipart-4.png")));
             GameBlock.Children.Add(text);
             CountBlock.Text = Convert.ToString(Convert.ToInt32(CountBlock.Text) - 1);
             Grid.SetColumn(text, pos.Item1);
-            Grid.SetRow(text, pos.Item2);}
+            Grid.SetRow(text, pos.Item2);
+        }
         
         private void Restart(object sender, RoutedEventArgs e)
         {
@@ -392,11 +380,7 @@ namespace Mineswipper
                         break;
                         
             }
-            
-            
         }
-        
-
         private void OpenBtn((int, int) pos, object sender, RoutedEventArgs e)
         {
            
@@ -414,14 +398,14 @@ namespace Mineswipper
                 matrixMine.cells[pos.Item1, pos.Item2].IsOpen = true;
                 switch (text.Content)
                 {
-                    case "1": text.Foreground = new SolidColorBrush(Colors.Lime); break;
-                    case "2": text.Foreground = new SolidColorBrush(Colors.Yellow); break;
-                    case "3": text.Foreground = new SolidColorBrush(Colors.Ivory); break;
-                    case "4": text.Foreground = new SolidColorBrush(Colors.LightSkyBlue); break;
-                    case "5": text.Foreground = new SolidColorBrush(Colors.Aquamarine); break;
-                    case "6": text.Foreground = new SolidColorBrush(Colors.PeachPuff); break;
-                    case "7": text.Foreground = new SolidColorBrush(Colors.Pink); break;
-                    case "8": text.Foreground = new SolidColorBrush(Colors.Silver); break;
+                    case 1: text.Foreground = new SolidColorBrush(Colors.Lime); break;
+                    case 2: text.Foreground = new SolidColorBrush(Colors.Yellow); break;
+                    case 3: text.Foreground = new SolidColorBrush(Colors.Ivory); break;
+                    case 4: text.Foreground = new SolidColorBrush(Colors.LightSkyBlue); break;
+                    case 5: text.Foreground = new SolidColorBrush(Colors.Aquamarine); break;
+                    case 6: text.Foreground = new SolidColorBrush(Colors.PeachPuff); break;
+                    case 7: text.Foreground = new SolidColorBrush(Colors.Pink); break;
+                    case 8: text.Foreground = new SolidColorBrush(Colors.Silver); break;
                 }
                 text.Style = (Style)Resources["UnderNumber"];
                 GameBlock.Children.Add(text);
@@ -489,46 +473,6 @@ namespace Mineswipper
                         GameBlock.Children.Add(text);
                         Grid.SetColumn(text, pos.Item1);
                         Grid.SetRow(text, pos.Item2);
-                    }
-                }
-            }
-
-            MessageBox.Show("Вы проиграли");
-            this.Close();
-        }
-        private void OpenAll()
-        {
-            for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
-            {
-                for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
-                {
-                    if (matrixMine.cells[i,j].HasMine == true)
-                    {
-                        (int, int) pos = (i, j);
-                        Label text = new Label();
-                        text.Background = new ImageBrush(new BitmapImage(new Uri("https://clipartart.com/images/mine-sweeper-clipart-4.png")));
-                        GameBlock.Children.Add(text);
-                        Grid.SetColumn(text, pos.Item1);
-                        Grid.SetRow(text, pos.Item2);
-                    }
-                    else if(matrixMine.cells[i,j].MinesAround != 0)
-                    {
-                        (int, int) pos = (i, j);
-                        Label text = new Label();
-                        text.Content = "" + matrixMine.cells[i, j].MinesAround;
-                        GameBlock.Children.Add(text);
-                        Grid.SetColumn(text, pos.Item1);
-                        Grid.SetRow(text, pos.Item2);
-                    }
-                    else if(matrixMine.cells[i,j].MinesAround == 0)
-                    {
-                        (int, int) pos = (i, j);
-                        Label text = new Label();
-                        text.Content = "" + matrixMine.cells[i, j].MinesAround;
-                        GameBlock.Children.Add(text);
-                        Grid.SetColumn(text, pos.Item1);
-                        Grid.SetRow(text, pos.Item2);
-                        
                     }
                 }
             }

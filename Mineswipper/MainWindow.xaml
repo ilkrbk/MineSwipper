@@ -41,9 +41,6 @@
     </Window.Resources>
     <StackPanel>
         <Grid x:Name="Toolbar" Background="#3d3d3d" Height="50px">
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100*"/>
                 <ColumnDefinition Width="50px"></ColumnDefinition>

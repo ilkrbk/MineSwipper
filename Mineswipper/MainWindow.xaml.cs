@@ -120,7 +120,7 @@ namespace Mineswipper
                 matrixMine = MineCreate(posButton);
                 SearchCounter(ref matrixMine);
             }
-            OpenBtn(posButton);
+            OpenBtn(posButton, sender, e);
         }
         private void ClickRightButton(object sender, RoutedEventArgs e)
         {
@@ -137,7 +137,27 @@ namespace Mineswipper
                 button.Content = img;
                 CountBlock.Text = Convert.ToString(Convert.ToInt32(CountBlock.Text) - 1);
             }
+
+            if (Convert.ToInt32(CountBlock.Text) == 0 && checkMatrixMine())
+            {
+                MessageBox.Show("Вы выйграли");
+                this.Close();
+            }
             (int, int) posButton = (Grid.GetColumn(button), Grid.GetRow(button));
+        }
+        private bool checkMatrixMine()
+        {
+            for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
+            {
+                for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
+                {
+                    if (matrixMine[i, j] != "0" || matrixMine[i, j] != "0")
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
         private int ConvertStr(string str)
         {
@@ -163,11 +183,20 @@ namespace Mineswipper
                 int temp = rnd.Next(1, itemsNum);
                 int rowPos = ((temp / GameBlock.ColumnDefinitions.Count));
                 int colPos = ((temp % GameBlock.ColumnDefinitions.Count));
-                if (rowPos != posButton.Item2 && colPos != posButton.Item1 && SearchInList(listWithMines, temp))
-                {
-                    listWithMines.Add(temp);
-                    field[colPos, rowPos] = "*";
-                }
+                if (SearchInList(listWithMines, temp))
+                    if (rowPos != posButton.Item2 && colPos != posButton.Item1
+                    | rowPos != posButton.Item2 - 1 && colPos != posButton.Item1
+                    | rowPos != posButton.Item2 + 1 && colPos != posButton.Item1
+                    | rowPos != posButton.Item2 && colPos != posButton.Item1 - 1
+                    | rowPos != posButton.Item2 && colPos != posButton.Item1 + 1
+                    | rowPos != posButton.Item2 - 1 && colPos != posButton.Item1 - 1
+                    | rowPos != posButton.Item2 + 1 && colPos != posButton.Item1 + 1
+                    | rowPos != posButton.Item2 + 1 && colPos != posButton.Item1 - 1
+                    | rowPos != posButton.Item2 - 1 && colPos != posButton.Item1 + 1)
+                    {
+                        listWithMines.Add(temp);
+                        field[colPos, rowPos] = "*";
+                    }
             }
             return field;
         }
@@ -201,7 +230,7 @@ namespace Mineswipper
                 }
             }
         }
-        private void OpenBtn((int, int) pos)
+        private void OpenBtn((int, int) pos, object sender, RoutedEventArgs e)
         {
             if (matrixMine[pos.Item1, pos.Item2] == "")
                 return;
@@ -209,9 +238,10 @@ namespace Mineswipper
             int count = CheckClickCount(pos);
             //MessageBox.Show($"{pos.Item1} = {pos.Item2} = {count} ==== {((pos.Item1 * GameBlock.RowDefinitions.Count) + pos.Item2) - count}");
             GameBlock.Children.RemoveAt(((pos.Item1 * GameBlock.RowDefinitions.Count) + pos.Item2) - count);
-            if (matrixMine[pos.Item1, pos.Item2] != "0")
+            if (matrixMine[pos.Item1, pos.Item2] != "0" && matrixMine[pos.Item1, pos.Item2] != "*")
             {
                 text.Content = matrixMine[pos.Item1, pos.Item2];
+                matrixMine[pos.Item1, pos.Item2] = "-1";
                 matrixMine[pos.Item1, pos.Item2] = "";
                 switch (text.Content)
                 {
@@ -229,46 +259,71 @@ namespace Mineswipper
                 Grid.SetColumn(text, pos.Item1);
                 Grid.SetRow(text, pos.Item2);
             }
+            else if (matrixMine[pos.Item1, pos.Item2] == "*")
+            {
+                OpenAllMine();
+            }
             else
             {
                 matrixMine[pos.Item1, pos.Item2] = "";
                 if (pos.Item1 == 0 && pos.Item2 == 0)
                     for (int i = 0; i <= 1; i++)
                         for (int j = 0; j <= 1; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item1 == 0)
                     for (int i = 0; i <= 1; i++)
                         for (int j = -1; j <= 1; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item2 == 0)
                     for (int i = -1; i <= 1; i++)
                         for (int j = 0; j <= 1; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item1 == GameBlock.ColumnDefinitions.Count - 1 && pos.Item2 == GameBlock.RowDefinitions.Count - 1)
                     for (int i = -1; i <= 0; i++)
                         for (int j = -1; j <= 0; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item1 == GameBlock.ColumnDefinitions.Count - 1)
                     for (int i = -1; i <= 0; i++)
                         for (int j = -1; j <= 1; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item2 == GameBlock.RowDefinitions.Count - 1)
                     for (int i = -1; i <= 1; i++)
                         for (int j = -1; j <= 0; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item2 == 0 && pos.Item1 == GameBlock.ColumnDefinitions.Count - 1)
                     for (int i = -1; i <= 0; i++)
                         for (int j = -1; j <= 1; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item1 == 0 && pos.Item2 == GameBlock.RowDefinitions.Count - 1)
                     for (int i = -1; i <= 1; i++)
                         for (int j = -1; j <= 0; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else
                     for (int i = -1; i <= 1; i++)
                         for (int j = -1; j <= 1; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j));
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
             }
+        }
+        private void OpenAllMine()
+        {
+            for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
+            {
+                for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
+                {
+                    if (matrixMine[i,j] == "*")
+                    {
+                        (int, int) pos = (i, j);
+                        Label text = new Label();
+                        text.Background = new ImageBrush(new BitmapImage(new Uri("https://clipartart.com/images/mine-sweeper-clipart-4.png")));
+                        GameBlock.Children.Add(text);
+                        Grid.SetColumn(text, pos.Item1);
+                        Grid.SetRow(text, pos.Item2);
+                    }
+                }
+            }
+
+            MessageBox.Show("Вы проиграли");
+            this.Close();
         }
         private int CheckClickCount((int, int) pos)
         {

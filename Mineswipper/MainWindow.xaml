@@ -52,13 +52,12 @@
                 <ColumnDefinition Width="100*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="CountBlock" Grid.Column="0" Style="{StaticResource MainCount}">000</TextBlock>
-            <Button Grid.Column="1" Style="{StaticResource MainBtn}" Content="R" Click="Restart"></Button>
-
-            <Button Grid.Column="2" Style="{StaticResource MainBtn}" Content="E" Click="EasyLevel"></Button>
-            <Button Grid.Column="3" Style="{StaticResource MainBtn}" Content="N" Click="NormalLevel"></Button>
-            <Button Grid.Column="4" Style="{StaticResource MainBtn}"  Content="H" Click="HardLevel">
+            <Button  Grid.Column="1" Style="{StaticResource MainBtn}"  Name="Res" Content="R" Click="Restart" ></Button>
+            <Button  Grid.Column="2" Style="{StaticResource MainBtn}" Name="Easy" Content="E" Click="EasyLevel" IsEnabled="False"></Button>
+            <Button Grid.Column="3" Style="{StaticResource MainBtn}" Name="Normal" Content="N" Click="NormalLevel"></Button>
+            <Button  Grid.Column="4" Style="{StaticResource MainBtn}" Name="Hard" Content="H" Click="HardLevel">
                 </Button>
-            <Button Grid.Column="5" Style="{StaticResource MainBtn}"  Click="Podskazka">
+            <Button  Grid.Column="5" Style="{StaticResource MainBtn}" Name="Podskaz" Click="Podskazka">
                 <StackPanel>
                     <Image Source="C:\Users\SuperPC\Desktop\zagruz.png" />
                     

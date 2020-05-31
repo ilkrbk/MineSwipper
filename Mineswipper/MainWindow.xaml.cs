@@ -12,11 +12,15 @@ namespace Mineswipper
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    ///
+    
+    
     public partial class MainWindow : Window
     {
         DispatcherTimer dt = new DispatcherTimer();
         Stopwatch sw = new Stopwatch();
         string currentTime = string.Empty;
+        public static  int levelToRestart=0;
         //string[,] matrixMine;
          Field matrixMine;
         public MainWindow()
@@ -50,6 +54,23 @@ namespace Mineswipper
             this.Width = 450;
             CountBlock.Text = "50";
             int col = 18, row = 14;
+            switch (levelToRestart)
+            {
+
+                case 1:
+                    Normal.IsEnabled = true;
+                    Easy.IsEnabled = false;
+                    break;
+                case 2:
+                    Hard.IsEnabled = true;
+                    Easy.IsEnabled = false;
+
+
+                    break;
+            }
+
+            levelToRestart = 0;
+            Easy.IsEnabled = false;
             TimeBlock.Text = "00:00";
             if (GameBlock.Children.Count != 0)
             {
@@ -62,6 +83,21 @@ namespace Mineswipper
             sw.Reset();
             TimeBlock.Text = "00:00";
             CountBlock.Text = "100";
+            switch (levelToRestart)
+            {
+
+                case 0:
+                    Normal.IsEnabled = false;
+                    Easy.IsEnabled = true;
+                    break;
+                case 2:
+                    Hard.IsEnabled = true;
+                    Normal.IsEnabled = false;
+
+
+                    break;
+            }
+            levelToRestart = 1;
             this.Height = 535;
             this.Width = 650;
             int col = 26, row = 18;
@@ -74,6 +110,19 @@ namespace Mineswipper
             TimeBlock.Text = "00:00";
             CountBlock.Text = "150";
             this.Height = 680;
+            switch (levelToRestart)
+            {
+
+                case 0:
+                    Hard.IsEnabled = false;
+                    Easy.IsEnabled = true;
+                    break;
+                case 1:
+                    Hard.IsEnabled = false;
+                     Normal.IsEnabled = true;
+                    break;
+            }
+            levelToRestart = 2;
             this.Width = 850;
             int col = 34, row = 26;
             CleanGrid();
@@ -245,12 +294,26 @@ namespace Mineswipper
         private void Podskazka(object sender, RoutedEventArgs e)
         {
             
-            
+          
             
         }
         private void Restart(object sender, RoutedEventArgs e)
         {
-            
+            switch (levelToRestart)
+            {
+                case 0 :
+                    EasyLevel( sender,  e);
+
+                    break;
+                case 1:
+                    NormalLevel( sender,  e);
+                    break;
+                case 2:
+                    HardLevel( sender,  e);
+
+                        break;
+                        
+            }
             
             
         }

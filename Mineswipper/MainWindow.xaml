@@ -28,7 +28,7 @@
         <Style x:Key="GameBtn">
             <Setter Property="ItemsControl.BorderBrush" Value="#003333"></Setter>
             <Setter Property="ItemsControl.BorderThickness" Value="1"></Setter>
-            <Setter Property="ItemsControl.Background" Value="#FFFFFF"></Setter>
+            <Setter Property="ItemsControl.Background" Value="#000000"></Setter>
             <Setter Property="ItemsControl.FontSize" Value="25"></Setter>
         </Style>
         <Style x:Key="UnderNumber">
@@ -57,7 +57,7 @@
             <Button Grid.Column="3" Style="{StaticResource MainBtn}" Name="Normal" Content="N" Click="NormalLevel"></Button>
             <Button  Grid.Column="4" Style="{StaticResource MainBtn}" Name="Hard" Content="H" Click="HardLevel">
                 </Button>
-            <Button  Grid.Column="5" Style="{StaticResource MainBtn}" Name="Podskaz" Click="Podskazka">
+            <Button  Grid.Column="5" Style="{StaticResource MainBtn}" Name="Podskazochka" Click="Podskazka">
                 <StackPanel>
                     <Image Source="C:\Users\SuperPC\Desktop\zagruz.png" />
                     

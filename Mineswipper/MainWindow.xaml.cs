@@ -21,6 +21,8 @@ namespace Mineswipper
         Stopwatch sw = new Stopwatch();
         string currentTime = string.Empty;
         public static  int levelToRestart=0;
+
+        public static (int, int) lastClick;
         //string[,] matrixMine;
          Field matrixMine;
         public MainWindow()
@@ -165,6 +167,7 @@ namespace Mineswipper
         {
             var button = (Button)sender;
             (int, int) posButton = (Grid.GetColumn(button), Grid.GetRow(button));
+            lastClick = (Grid.GetColumn(button), Grid.GetRow(button));
             if (ConvertStr(TimeBlock.Text) == 0)
             {
                 //matrixMine = MineCreate(posButton);
@@ -294,9 +297,84 @@ namespace Mineswipper
         private void Podskazka(object sender, RoutedEventArgs e)
         {
             
-          
-            
+            for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
+            {
+                for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
+                {
+                    if (matrixMine.cells[i,j].HasMine == false && matrixMine.cells[i, j].IsOpen== true)
+                    {
+                        if (i-1>=0 && j-1>=0 &&matrixMine.cells[i - 1, j - 1].IsOpen ==
+                            false && matrixMine.cells[i - 1, j - 1].HasMine == true)
+                        {
+                            Podskaz(i - 1, j - 1);
+                            return;
+                        }
+                        else if (i-1>=0 && j>=0 && matrixMine.cells[i - 1, j].IsOpen ==
+                            false && matrixMine.cells[i - 1, j].HasMine == true)
+                        {
+                            Podskaz(i - 1, j );
+                            return;
+                        }
+                        else if (i-1>=0 && j+1<=(GameBlock.RowDefinitions.Count-1) &&matrixMine.cells[i - 1, j + 1].IsOpen ==
+                            false && matrixMine.cells[i - 1, j + 1].HasMine == true)
+                        {
+                            Podskaz(i - 1, j + 1);
+                            return;
+                        }
+                        else if (i>=0 && j+1<=(GameBlock.RowDefinitions.Count-1) &&matrixMine.cells[i , j + 1].IsOpen ==
+                            false && matrixMine.cells[i , j + 1].HasMine == true)
+                        {
+                            Podskaz(i , j + 1);
+                            return;
+                        }
+                        else if(i+1<=(GameBlock.ColumnDefinitions.Count-1) && j+1<=(GameBlock.RowDefinitions.Count-1) &&matrixMine.cells[i+1 , j + 1].IsOpen ==
+                            false && matrixMine.cells[i+1 , j + 1].HasMine == true)
+                        {
+                            Podskaz(i+1 , j + 1);
+                            return;
+                            
+                        }
+                        else if(i+1<=(GameBlock.ColumnDefinitions.Count-1) && j<=(GameBlock.RowDefinitions.Count-1)&&matrixMine.cells[i+1 , j ].IsOpen ==
+                            false && matrixMine.cells[i+1 , j ].HasMine == true)
+                        {
+                            Podskaz(i +1, j );
+                            return;
+                            
+                        }
+                        else if(i+1<=(GameBlock.ColumnDefinitions.Count-1) && j-1>=0&&matrixMine.cells[i+1 , j -1].IsOpen ==
+                            false && matrixMine.cells[i+1 , j -1 ].HasMine == true)
+                        {
+                            Podskaz(i+1 , j -1 );
+                            return;
+                            
+                        }
+                        else if(i<=(GameBlock.ColumnDefinitions.Count-1) && j-1>=0&&matrixMine.cells[i , j -1].IsOpen ==
+                            false && matrixMine.cells[i , j -1 ].HasMine == true)
+                        {
+                            Podskaz(i, j -1 );
+                            return;
+                            
+                        }
+
+                        
+                    }
+                    
+                    
+                }
+            }
         }
+        private void Podskaz(int i, int j)
+        {
+            matrixMine.cells[i, j].IsOpen = true;
+            
+            (int, int) pos = (i, j);
+            Label text = new Label();
+            text.Background = new ImageBrush(new BitmapImage(new Uri("https://clipartart.com/images/mine-sweeper-clipart-4.png")));
+            GameBlock.Children.Add(text);
+            CountBlock.Text = Convert.ToString(Convert.ToInt32(CountBlock.Text) - 1);
+            Grid.SetColumn(text, pos.Item1);
+            Grid.SetRow(text, pos.Item2);}
+        
         private void Restart(object sender, RoutedEventArgs e)
         {
             switch (levelToRestart)
@@ -361,6 +439,18 @@ namespace Mineswipper
                     for (int i = 0; i <= 1; i++)
                         for (int j = 0; j <= 1; j++)
                             OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
+                else if (pos.Item1 == GameBlock.ColumnDefinitions.Count - 1 && pos.Item2 == GameBlock.RowDefinitions.Count - 1)
+                    for (int i = -1; i <= 0; i++)
+                        for (int j = -1; j <= 0; j++)
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
+                else if (pos.Item2 == 0 && pos.Item1 == GameBlock.ColumnDefinitions.Count - 1)
+                    for (int i = -1; i <= 0; i++)
+                        for (int j = 0; j <= 1; j++)
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
+                else if (pos.Item1 == 0 && pos.Item2 == GameBlock.RowDefinitions.Count - 1)
+                    for (int i = 0; i <= 1; i++)
+                        for (int j = -1; j <= 0; j++)
+                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item1 == 0)
                     for (int i = 0; i <= 1; i++)
                         for (int j = -1; j <= 1; j++)
@@ -369,23 +459,11 @@ namespace Mineswipper
                     for (int i = -1; i <= 1; i++)
                         for (int j = 0; j <= 1; j++)
                             OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
-                else if (pos.Item1 == GameBlock.ColumnDefinitions.Count - 1 && pos.Item2 == GameBlock.RowDefinitions.Count - 1)
-                    for (int i = -1; i <= 0; i++)
-                        for (int j = -1; j <= 0; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item1 == GameBlock.ColumnDefinitions.Count - 1)
                     for (int i = -1; i <= 0; i++)
                         for (int j = -1; j <= 1; j++)
                             OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
                 else if (pos.Item2 == GameBlock.RowDefinitions.Count - 1)
-                    for (int i = -1; i <= 1; i++)
-                        for (int j = -1; j <= 0; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
-                else if (pos.Item2 == 0 && pos.Item1 == GameBlock.ColumnDefinitions.Count - 1)
-                    for (int i = -1; i <= 0; i++)
-                        for (int j = -1; j <= 1; j++)
-                            OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
-                else if (pos.Item1 == 0 && pos.Item2 == GameBlock.RowDefinitions.Count - 1)
                     for (int i = -1; i <= 1; i++)
                         for (int j = -1; j <= 0; j++)
                             OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);

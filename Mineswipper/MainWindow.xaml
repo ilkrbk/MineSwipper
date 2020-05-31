@@ -28,7 +28,7 @@
         <Style x:Key="GameBtn">
             <Setter Property="ItemsControl.BorderBrush" Value="#003333"></Setter>
             <Setter Property="ItemsControl.BorderThickness" Value="1"></Setter>
-            <Setter Property="ItemsControl.Background" Value="#000000"></Setter>
+            <Setter Property="ItemsControl.Background" Value="#FFFFFF"></Setter>
             <Setter Property="ItemsControl.FontSize" Value="25"></Setter>
         </Style>
         <Style x:Key="UnderNumber">
@@ -46,13 +46,26 @@
                 <ColumnDefinition Width="50px"></ColumnDefinition>
                 <ColumnDefinition Width="50px"></ColumnDefinition>
                 <ColumnDefinition Width="50px"></ColumnDefinition>
+                <ColumnDefinition Width="50px"></ColumnDefinition>
+                <ColumnDefinition Width="50px"></ColumnDefinition>
+
                 <ColumnDefinition Width="100*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="CountBlock" Grid.Column="0" Style="{StaticResource MainCount}">000</TextBlock>
-            <Button Grid.Column="1" Style="{StaticResource MainBtn}" Content="E" Click="EasyLevel"></Button>
-            <Button Grid.Column="2" Style="{StaticResource MainBtn}" Content="N" Click="NormalLevel"></Button>
-            <Button Grid.Column="3" Style="{StaticResource MainBtn}" Content="H" Click="HardLevel"></Button>
-            <TextBlock x:Name="TimeBlock" Grid.Column="4" Style="{StaticResource MainCount}">00:00</TextBlock>
+            <Button Grid.Column="1" Style="{StaticResource MainBtn}" Content="R" Click="Restart"></Button>
+
+            <Button Grid.Column="2" Style="{StaticResource MainBtn}" Content="E" Click="EasyLevel"></Button>
+            <Button Grid.Column="3" Style="{StaticResource MainBtn}" Content="N" Click="NormalLevel"></Button>
+            <Button Grid.Column="4" Style="{StaticResource MainBtn}"  Content="H" Click="HardLevel">
+                </Button>
+            <Button Grid.Column="5" Style="{StaticResource MainBtn}"  Click="Podskazka">
+                <StackPanel>
+                    <Image Source="C:\Users\SuperPC\Desktop\zagruz.png" />
+                    
+                </StackPanel>
+            </Button>
+
+            <TextBlock x:Name="TimeBlock" Grid.Column="6" Style="{StaticResource MainCount}">00:00</TextBlock>
         </Grid>
         <Grid x:Name="GameBlock" Background="#3d3d3d">
             

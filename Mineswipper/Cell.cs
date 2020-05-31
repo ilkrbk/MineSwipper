@@ -4,5 +4,6 @@
     {
         public bool IsOpen;
         public bool HasMine;
+        public int MinesAround;
     }
 }

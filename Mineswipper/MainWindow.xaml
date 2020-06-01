@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mineswipper"
-        Icon="https://clipartart.com/images/mine-sweeper-clipart-4.png"
+        Icon="https://ilkrbk.github.io/logo.png"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
@@ -42,14 +42,13 @@
     <StackPanel>
         <Grid x:Name="Toolbar" Background="#3d3d3d" Height="50px">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100*"/>
+                <ColumnDefinition Width="50*"/>
                 <ColumnDefinition Width="50px"></ColumnDefinition>
                 <ColumnDefinition Width="50px"></ColumnDefinition>
                 <ColumnDefinition Width="50px"></ColumnDefinition>
                 <ColumnDefinition Width="50px"></ColumnDefinition>
                 <ColumnDefinition Width="50px"></ColumnDefinition>
-
-                <ColumnDefinition Width="100*"></ColumnDefinition>
+                <ColumnDefinition Width="150*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="CountBlock" Grid.Column="0" Style="{StaticResource MainCount}">000</TextBlock>
             <Button  Grid.Column="1" Style="{StaticResource MainBtn}"  Name="Res" Content="R" Click="Restart" ></Button>
@@ -59,12 +58,11 @@
                 </Button>
             <Button  Grid.Column="5" Style="{StaticResource MainBtn}" Name="Podskazochka" Click="Podskazka" IsEnabled="False">
                 <StackPanel>
-                    <Image Source="C:\Users\SuperPC\Desktop\zagruz.png" />
-                    
+                    <Image Source="https://ilkrbk.github.io/help.png" />
                 </StackPanel>
             </Button>
 
-            <TextBlock x:Name="TimeBlock" Grid.Column="6" Style="{StaticResource MainCount}">00:00</TextBlock>
+            <TextBlock x:Name="TimeBlock" Grid.Column="6" Style="{StaticResource MainCount}">00:00:00</TextBlock>
         </Grid>
         <Grid x:Name="GameBlock" Background="#3d3d3d">
             

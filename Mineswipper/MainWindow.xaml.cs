@@ -12,20 +12,13 @@ namespace Mineswipper
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    ///
-    
-    
     public partial class MainWindow : Window
     {
         DispatcherTimer dt = new DispatcherTimer();
         Stopwatch sw = new Stopwatch();
         string currentTime = string.Empty;
         public static  int levelToRestart=0;
-        public static  int nameBtn=0;
-
-        public static (int, int) lastClick;
-        //string[,] matrixMine;
-         Field matrixMine;
+        Field matrixMine;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,11 +34,9 @@ namespace Mineswipper
             if (sw.IsRunning)
             {
                 TimeSpan ts = sw.Elapsed;
-                currentTime = String.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
-                if (currentTime == "59:59")
-                {
+                currentTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                if (currentTime == "59:59:59")
                     sw.Stop();
-                }
                 TimeBlock.Text = currentTime;
             }
         }
@@ -56,7 +47,6 @@ namespace Mineswipper
         }
         private void EasyLevel(object sender, RoutedEventArgs e)
         {
-           
             sw.Reset();
             this.Height = 435;
             this.Width = 450;
@@ -64,39 +54,25 @@ namespace Mineswipper
             int col = 18, row = 14;
             switch (levelToRestart)
             {
-                case 1:
-                    Normal.IsEnabled = true;
-                    Easy.IsEnabled = false;
-                    break;
-                case 2:
-                    Hard.IsEnabled = true;
-                    Easy.IsEnabled = false;
-                    break;
+                case 1: Normal.IsEnabled = true; Easy.IsEnabled = false; break;
+                case 2: Hard.IsEnabled = true; Easy.IsEnabled = false; break;
             }
             levelToRestart = 0;
             Easy.IsEnabled = false;
-            TimeBlock.Text = "00:00";
+            TimeBlock.Text = "00:00:00";
             if (GameBlock.Children.Count != 0)
-            {
                 CleanGrid();
-            }
             CreateGrid(col, row);
         }
         private void NormalLevel(object sender, RoutedEventArgs e)
         {
             sw.Reset();
-            TimeBlock.Text = "00:00";
+            TimeBlock.Text = "00:00:00";
             CountBlock.Text = "100";
             switch (levelToRestart)
             {
-                case 0:
-                    Normal.IsEnabled = false;
-                    Easy.IsEnabled = true;
-                    break;
-                case 2:
-                    Hard.IsEnabled = true;
-                    Normal.IsEnabled = false;
-                    break;
+                case 0: Normal.IsEnabled = false; Easy.IsEnabled = true; break;
+                case 2: Hard.IsEnabled = true; Normal.IsEnabled = false; break;
             }
             levelToRestart = 1;
             this.Height = 535;
@@ -108,20 +84,13 @@ namespace Mineswipper
         private void HardLevel(object sender, RoutedEventArgs e)
         {
             sw.Reset();
-            TimeBlock.Text = "00:00";
+            TimeBlock.Text = "00:00:00";
             CountBlock.Text = "150";
             this.Height = 680;
             switch (levelToRestart)
             {
-
-                case 0:
-                    Hard.IsEnabled = false;
-                    Easy.IsEnabled = true;
-                    break;
-                case 1:
-                    Hard.IsEnabled = false;
-                     Normal.IsEnabled = true;
-                    break;
+                case 0: Hard.IsEnabled = false; Easy.IsEnabled = true; break;
+                case 1: Hard.IsEnabled = false; Normal.IsEnabled = true; break;
             }
             levelToRestart = 2;
             this.Width = 850;
@@ -167,17 +136,14 @@ namespace Mineswipper
         {
             var button = (Button)sender;
             (int, int) posButton = (Grid.GetColumn(button), Grid.GetRow(button));
-            lastClick = (Grid.GetColumn(button), Grid.GetRow(button));
             if (ConvertStr(TimeBlock.Text) == 0)
             {
-                //matrixMine = MineCreate(posButton);
                 matrixMine = MineCreate(posButton);
                 SearchCounter(ref matrixMine);
                 Podskazochka.IsEnabled = true;
             }
             OpenBtn(posButton, sender, e);
-            CheckYouWin(sender,e);
-           
+            CheckYouWin();
         }
         private void ClickRightButton(object sender, RoutedEventArgs e)
         {
@@ -190,28 +156,18 @@ namespace Mineswipper
             else
             {
                 Image img = new Image();
-                img.Source = new BitmapImage(new Uri("https://img2.freepng.ru/20181116/jkb/kisspng-vector-graphics-clip-art-stock-illustration-monkey-png-5bee729ce16496.8767947215423535649232.jpg"));
+                img.Source = new BitmapImage(new Uri("https://ilkrbk.github.io/flag.png"));
                 button.Content = img;
                 CountBlock.Text = Convert.ToString(Convert.ToInt32(CountBlock.Text) - 1);
             }
-
-            CheckYouWin(sender,e);
-            (int, int) posButton = (Grid.GetColumn(button), Grid.GetRow(button));
+            CheckYouWin();
         }
         private bool checkMatrixMine()
         {
             for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
-            {
                 for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
-                {
                     if (matrixMine.cells[i, j].IsOpen == false && matrixMine.cells[i, j].HasMine == false)
-                    {
-                       
-
                         return false;
-                    }
-                }
-            }
             return true;
         }
         private int ConvertStr(string str)
@@ -220,17 +176,14 @@ namespace Mineswipper
             foreach (var item in str)
                 list.Add(item);
             list.RemoveAt(list.Count - 3);
+            list.RemoveAt(list.Count - 5);
             string result = "";
             foreach (var item in list)
-            {
                 result += item;
-            }
-
             return Convert.ToInt32(result);
         }
         private Field MineCreate((int, int) posButton)
         {
-            //string[,] field = new string[GameBlock.ColumnDefinitions.Count, GameBlock.RowDefinitions.Count];
             Field field= new Field(GameBlock.ColumnDefinitions.Count, GameBlock.RowDefinitions.Count);
             int itemsNum = GameBlock.ColumnDefinitions.Count * GameBlock.RowDefinitions.Count;
             Random rnd = new Random();
@@ -266,7 +219,6 @@ namespace Mineswipper
         private void SearchCounter(ref Field matrix)
         {
             for (int i = 0; i < GameBlock.ColumnDefinitions.Count; ++i)
-            {
                 for (int j = 0; j < GameBlock.RowDefinitions.Count; ++j)
                 {
                     int count = 0;
@@ -285,7 +237,6 @@ namespace Mineswipper
                         matrix.cells[i, j].MinesAround = count;
                     }
                 }
-            }
         }
         private void Podskazka(object sender, RoutedEventArgs e)
         {
@@ -319,19 +270,16 @@ namespace Mineswipper
                         {
                             Podskaz(i+1 , j + 1);
                             return;
-                            
                         }
                         if(i+1<=(GameBlock.ColumnDefinitions.Count-1) && j<=(GameBlock.RowDefinitions.Count-1)&&matrixMine.cells[i+1 , j ].IsOpen == false && matrixMine.cells[i+1 , j ].HasMine == true)
                         {
                             Podskaz(i +1, j );
                             return;
-                            
                         }
                         if(i+1<=(GameBlock.ColumnDefinitions.Count-1) && j-1>=0&&matrixMine.cells[i+1 , j -1].IsOpen == false && matrixMine.cells[i+1 , j -1 ].HasMine == true)
                         {
                             Podskaz(i+1 , j -1 );
                             return;
-                            
                         }
                         if(i<=(GameBlock.ColumnDefinitions.Count-1) && j-1>=0&&matrixMine.cells[i , j -1].IsOpen == false && matrixMine.cells[i , j -1 ].HasMine == true)
                         {
@@ -342,8 +290,7 @@ namespace Mineswipper
                 }
             }
         }
-
-        private void CheckYouWin(object sender, RoutedEventArgs e)
+        private void CheckYouWin()
         {
             if (Convert.ToInt32(CountBlock.Text) == 0 && checkMatrixMine())
             {
@@ -354,40 +301,23 @@ namespace Mineswipper
         }
         private void Podskaz(int i, int j)
         {
-            /*Image img = new Image();
-            img.Source = new BitmapImage(new Uri("https://img2.freepng.ru/20181116/jkb/kisspng-vector-graphics-clip-art-stock-illustration-monkey-png-5bee729ce16496.8767947215423535649232.jpg"));
-            button.Content = img;*/
-            // ==========
             int count = CheckClickCount((i,j));
             GameBlock.Children.RemoveAt(((i * GameBlock.RowDefinitions.Count) + j) - count);
-            //==========
             matrixMine.cells[i, j].IsOpen = true;
             Image img = new Image();
             CountBlock.Text = Convert.ToString(Convert.ToInt32(CountBlock.Text) - 1);
-            img.Source = new BitmapImage(new Uri("https://img2.freepng.ru/20181116/jkb/kisspng-vector-graphics-clip-art-stock-illustration-monkey-png-5bee729ce16496.8767947215423535649232.jpg"));
+            img.Source = new BitmapImage(new Uri("https://ilkrbk.github.io/flag.png"));
             GameBlock.Children.Add(img);
             Grid.SetColumn(img, i);
             Grid.SetRow(img, j);
-            //GameBlock.Children[i * j].Content = img;
         }
-        
         private void Restart(object sender, RoutedEventArgs e)
         {
-            
             switch (levelToRestart)
             {
-                case 0 :
-                    EasyLevel(sender,  e);
-
-                    break;
-                case 1:
-                    NormalLevel( sender,  e);
-                    break;
-                case 2:
-                    HardLevel( sender,  e);
-
-                        break;
-                        
+                case 0 : EasyLevel(sender,  e); break;
+                case 1: NormalLevel( sender,  e); break;
+                case 2: HardLevel( sender,  e); break;
             }
         }
         private void OpenBtn((int, int) pos, object sender, RoutedEventArgs e)
@@ -396,12 +326,10 @@ namespace Mineswipper
                 return;
             Label text = new Label();
             int count = CheckClickCount(pos);
-            //MessageBox.Show($"{pos.Item1} = {pos.Item2} = {count} ==== {((pos.Item1 * GameBlock.RowDefinitions.Count) + pos.Item2) - count}");
             GameBlock.Children.RemoveAt(((pos.Item1 * GameBlock.RowDefinitions.Count) + pos.Item2) - count);
             if (matrixMine.cells[pos.Item1, pos.Item2].MinesAround != 0 && matrixMine.cells[pos.Item1, pos.Item2].HasMine != true)
             {
                 text.Content = matrixMine.cells[pos.Item1, pos.Item2].MinesAround;
-                //matrixMine.cells[pos.Item1, pos.Item2].MinesAround = -1;
                 matrixMine.cells[pos.Item1, pos.Item2].IsOpen = true;
                 switch (text.Content)
                 {
@@ -421,9 +349,7 @@ namespace Mineswipper
                 Grid.SetRow(text, pos.Item2);
             }
             else if (matrixMine.cells[pos.Item1, pos.Item2].HasMine==true)
-            {
                 OpenAllMine(sender, e);
-            }
             else
             {
                 matrixMine.cells[pos.Item1, pos.Item2].IsOpen = true;
@@ -463,92 +389,38 @@ namespace Mineswipper
                     for (int i = -1; i <= 1; i++)
                         for (int j = -1; j <= 1; j++)
                             OpenBtn((pos.Item1 + i, pos.Item2 + j), sender, e);
-                
             }
-           
         }
         private void OpenAllMine(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
-            {
                 for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
                 {
                     if (matrixMine.cells[i,j].HasMine == true)
                     {
                         (int, int) pos = (i, j);
                         Label text = new Label();
-                        text.Background = new ImageBrush(new BitmapImage(new Uri("https://clipartart.com/images/mine-sweeper-clipart-4.png")));
+                        text.Background = new ImageBrush(new BitmapImage(new Uri("https://ilkrbk.github.io/mine.png")));
                         GameBlock.Children.Add(text);
                         Grid.SetColumn(text, pos.Item1);
                         Grid.SetRow(text, pos.Item2);
                     }
                 }
-            }
-
-                    Looser win2 = new Looser(false);
-                    win2.Show();
-                    this.Close();
-                 
-            
+            Looser win2 = new Looser(false);
+            win2.Show();
+            this.Close();
         }
-
-        private void OpenAll()
-        {
-            for (int i = 0; i < GameBlock.ColumnDefinitions.Count; i++)
-            {
-                for (int j = 0; j < GameBlock.RowDefinitions.Count; j++)
-                {
-                    if (matrixMine.cells[i,j].HasMine == true)
-                    {
-                        (int, int) pos = (i, j);
-                        Label text = new Label();
-                        text.Background = new ImageBrush(new BitmapImage(new Uri("https://clipartart.com/images/mine-sweeper-clipart-4.png")));
-                        GameBlock.Children.Add(text);
-                        Grid.SetColumn(text, pos.Item1);
-                        Grid.SetRow(text, pos.Item2);
-                    }
-                    else if(matrixMine.cells[i,j].MinesAround != 0)
-                    {
-                        (int, int) pos = (i, j);
-                        Label text = new Label();
-                        text.Content = "" + matrixMine.cells[i, j].MinesAround;
-                        GameBlock.Children.Add(text);
-                        Grid.SetColumn(text, pos.Item1);
-                        Grid.SetRow(text, pos.Item2);
-                    }
-                    else if(matrixMine.cells[i,j].MinesAround == 0)
-                    {
-                        (int, int) pos = (i, j);
-                        Label text = new Label();
-                        text.Content = "" + matrixMine.cells[i, j].MinesAround;
-                        GameBlock.Children.Add(text);
-                        Grid.SetColumn(text, pos.Item1);
-                        Grid.SetRow(text, pos.Item2);
-                        
-                    }
-                }
-            }
-
-            
-        }
-
         private int CheckClickCount((int, int) pos)
         {
             int count = 0;
             for (int i = 0; i < GameBlock.ColumnDefinitions.Count; ++i)
-            {
                 for (int k = 0; k < GameBlock.RowDefinitions.Count; ++k)
                 {
                     if (matrixMine.cells[i, k].IsOpen == true)
-                    {
                         count++;
-                    }
                     if (i == pos.Item1 && k == pos.Item2)
-                    {
                         return count;
-                    }
                 }
-            }
             return count;
         }
     }

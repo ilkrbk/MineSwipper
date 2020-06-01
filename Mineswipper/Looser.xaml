@@ -26,33 +26,10 @@
             <Setter Property="ItemsControl.HorizontalAlignment" Value="Center"></Setter>
             <Setter Property="ItemsControl.VerticalAlignment" Value="Center"></Setter>
         </Style>
-        <Style x:Key="GameBtn">
-            <Setter Property="ItemsControl.BorderBrush" Value="#003333"></Setter>
-            <Setter Property="ItemsControl.BorderThickness" Value="1"></Setter>
-            <Setter Property="ItemsControl.Background" Value="#000000"></Setter>
-            <Setter Property="ItemsControl.FontSize" Value="25"></Setter>
-        </Style>
-        <Style x:Key="UnderNumber">
-            <Setter Property="ItemsControl.Padding" Value="0 0 0 0"></Setter>
-            <Setter Property="ItemsControl.FontSize" Value="18"></Setter>
-            <Setter Property="ItemsControl.FontWeight" Value="Bold"></Setter>
-            <Setter Property="ItemsControl.VerticalAlignment" Value="Center"></Setter>
-            <Setter Property="ItemsControl.HorizontalAlignment" Value="Center"></Setter>
-        </Style>
     </Window.Resources>
     <StackPanel Background="Black">
         <TextBlock x:Name="GameOver" TextAlignment="Center" Style="{StaticResource MainCount }">GAME OVER</TextBlock>
-        
         <Button Height="100px"  Style="{StaticResource MainBtn}"  Name="Res" Content="Restart" Click="startbtn_Click" ></Button>
-        
-            
-            
-            <Button  Height="100px" Style="{StaticResource MainBtn}" Name="Easy" Content="Close" Click="Clos" ></Button>
-            
-            
-       
-        <Grid x:Name="GameBlock" Background="#3d3d3d">
-            
-        </Grid>
+        <Button  Height="100px" Style="{StaticResource MainBtn}" Name="Easy" Content="Close" Click="Clos" ></Button>
     </StackPanel>
 </Window>

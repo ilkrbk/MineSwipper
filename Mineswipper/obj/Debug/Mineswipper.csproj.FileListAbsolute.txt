@@ -43,3 +43,5 @@ C:\Users\ikoro\source\MineSwipper\Mineswipper\obj\Debug\Mineswipper.csproj.Gener
 C:\Users\ikoro\source\MineSwipper\Mineswipper\obj\Debug\Mineswipper.csproj.CoreCompileInputs.cache
 C:\Users\ikoro\source\MineSwipper\Mineswipper\obj\Debug\Mineswipper.exe
 C:\Users\ikoro\source\MineSwipper\Mineswipper\obj\Debug\Mineswipper.pdb
+D:\Labs\MineSwipper\Mineswipper\obj\Debug\Looser.g.cs
+D:\Labs\MineSwipper\Mineswipper\obj\Debug\Looser.baml

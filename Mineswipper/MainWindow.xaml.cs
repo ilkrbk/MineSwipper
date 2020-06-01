@@ -56,10 +56,11 @@ namespace Mineswipper
         }
         private void EasyLevel(object sender, RoutedEventArgs e)
         {
+           
             sw.Reset();
             this.Height = 435;
             this.Width = 450;
-            CountBlock.Text = "10";
+            CountBlock.Text = "50";
             int col = 18, row = 14;
             switch (levelToRestart)
             {
@@ -145,7 +146,6 @@ namespace Mineswipper
                     Button btn = new Button();
                     btn.Style = (Style)Resources["GameBtn"];
                     name.Children.Add(btn);
-
                     btn.MouseRightButtonDown += ClickRightButton;
                     btn.Click += ClickLeftButton;
                     btn.Click += startbtn_Click;
@@ -173,6 +173,7 @@ namespace Mineswipper
                 //matrixMine = MineCreate(posButton);
                 matrixMine = MineCreate(posButton);
                 SearchCounter(ref matrixMine);
+                Podskazochka.IsEnabled = true;
             }
             OpenBtn(posButton, sender, e);
             CheckYouWin(sender,e);
@@ -346,17 +347,9 @@ namespace Mineswipper
         {
             if (Convert.ToInt32(CountBlock.Text) == 0 && checkMatrixMine())
             {
-                MessageBoxResult result = MessageBox.Show("You Win! Would you like to restart?", "WINNER", MessageBoxButton.YesNo);
-                switch(result)
-                {
-                    case MessageBoxResult.Yes:
-                        Restart(sender,e);
-                        break;
-                    case MessageBoxResult.No:
-                        this.Close();
-                        break;
-                }
-                
+                Looser win2 = new Looser(true);
+                win2.Show();
+                this.Close();
             }
         }
         private void Podskaz(int i, int j)
@@ -380,10 +373,11 @@ namespace Mineswipper
         
         private void Restart(object sender, RoutedEventArgs e)
         {
+            
             switch (levelToRestart)
             {
                 case 0 :
-                    EasyLevel( sender,  e);
+                    EasyLevel(sender,  e);
 
                     break;
                 case 1:
@@ -491,17 +485,11 @@ namespace Mineswipper
                 }
             }
 
-            MessageBoxResult result = MessageBox.Show("You loose! Would you like to restart?", "Mine was detected", MessageBoxButton.YesNo);
-            switch(result)
-            {
-                case MessageBoxResult.Yes:
-                    Restart(sender,e);
-                    break;
-                case MessageBoxResult.No:
+                    Looser win2 = new Looser(false);
+                    win2.Show();
                     this.Close();
-                    break;
-                
-            }
+                 
+            
         }
 
         private void OpenAll()

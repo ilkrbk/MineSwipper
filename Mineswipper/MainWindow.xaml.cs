@@ -59,7 +59,7 @@ namespace Mineswipper
             sw.Reset();
             this.Height = 435;
             this.Width = 450;
-            CountBlock.Text = "50";
+            CountBlock.Text = "10";
             int col = 18, row = 14;
             switch (levelToRestart)
             {
@@ -145,6 +145,7 @@ namespace Mineswipper
                     Button btn = new Button();
                     btn.Style = (Style)Resources["GameBtn"];
                     name.Children.Add(btn);
+
                     btn.MouseRightButtonDown += ClickRightButton;
                     btn.Click += ClickLeftButton;
                     btn.Click += startbtn_Click;
@@ -174,6 +175,8 @@ namespace Mineswipper
                 SearchCounter(ref matrixMine);
             }
             OpenBtn(posButton, sender, e);
+            CheckYouWin(sender,e);
+           
         }
         private void ClickRightButton(object sender, RoutedEventArgs e)
         {
@@ -191,20 +194,7 @@ namespace Mineswipper
                 CountBlock.Text = Convert.ToString(Convert.ToInt32(CountBlock.Text) - 1);
             }
 
-            if (Convert.ToInt32(CountBlock.Text) == 0 && checkMatrixMine())
-            {
-                MessageBoxResult result = MessageBox.Show("You Win! Would you like to restart?", "WINNER", MessageBoxButton.YesNo);
-                switch(result)
-                {
-                    case MessageBoxResult.Yes:
-                        Restart(sender,e);
-                        break;
-                    case MessageBoxResult.No:
-                        this.Close();
-                        break;
-                }
-                this.Close();
-            }
+            CheckYouWin(sender,e);
             (int, int) posButton = (Grid.GetColumn(button), Grid.GetRow(button));
         }
         private bool checkMatrixMine()
@@ -215,6 +205,8 @@ namespace Mineswipper
                 {
                     if (matrixMine.cells[i, j].IsOpen == false && matrixMine.cells[i, j].HasMine == false)
                     {
+                       
+
                         return false;
                     }
                 }
@@ -349,6 +341,24 @@ namespace Mineswipper
                 }
             }
         }
+
+        private void CheckYouWin(object sender, RoutedEventArgs e)
+        {
+            if (Convert.ToInt32(CountBlock.Text) == 0 && checkMatrixMine())
+            {
+                MessageBoxResult result = MessageBox.Show("You Win! Would you like to restart?", "WINNER", MessageBoxButton.YesNo);
+                switch(result)
+                {
+                    case MessageBoxResult.Yes:
+                        Restart(sender,e);
+                        break;
+                    case MessageBoxResult.No:
+                        this.Close();
+                        break;
+                }
+                
+            }
+        }
         private void Podskaz(int i, int j)
         {
             /*Image img = new Image();
@@ -360,11 +370,11 @@ namespace Mineswipper
             //==========
             matrixMine.cells[i, j].IsOpen = true;
             Image img = new Image();
+            CountBlock.Text = Convert.ToString(Convert.ToInt32(CountBlock.Text) - 1);
             img.Source = new BitmapImage(new Uri("https://img2.freepng.ru/20181116/jkb/kisspng-vector-graphics-clip-art-stock-illustration-monkey-png-5bee729ce16496.8767947215423535649232.jpg"));
             GameBlock.Children.Add(img);
             Grid.SetColumn(img, i);
             Grid.SetRow(img, j);
-            //button0.Content = img;
             //GameBlock.Children[i * j].Content = img;
         }
         
